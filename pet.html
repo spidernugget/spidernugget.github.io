@@ -3,92 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PixelPet™ v3.2 — MochiLabs</title>
+<title>Pix — bichinho virtual</title>
 <style>
-  body { font-family: 'Avenir Next', system-ui, sans-serif; background: #fffdf7; color: #3a3530; max-width: 620px; margin: 30px auto; padding: 0 16px; }
-  header { border-bottom: 3px solid #e8a33d; padding-bottom: 10px; margin-bottom: 18px; }
-  h1 { font-size: 26px; margin: 0; } h1 small { color: #b0862f; font-size: 14px; font-weight: normal; }
-  .pet { font-size: 92px; text-align: center; margin: 10px 0; cursor: pointer; user-select: none; }
-  .panel { background: #fff; border: 1px solid #eee2c8; border-radius: 14px; padding: 14px; margin: 12px 0; }
-  .moodbar { display: flex; gap: 8px; justify-content: center; align-items: center; }
-  .moodbar img { width: 24px; height: 24px; }
-  .moodbar .lbl { font-size: 11px; color: #97826a; letter-spacing: .08em; text-transform: uppercase; }
-  .btns { text-align: center; margin: 12px 0; }
-  .btns button { font-family: inherit; font-size: 15px; margin: 4px; padding: 9px 20px; border: 2px solid #e8a33d; background: #fff; color: #9a6b16; border-radius: 22px; cursor: pointer; }
-  .btns button:hover { background: #e8a33d; color: #fff; }
-  .msg { text-align: center; min-height: 22px; color: #7a9a3a; font-size: 15px; }
-  section.doc { font-size: 12.5px; color: #6b635a; background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 12px 16px; margin: 18px 0; }
-  section.doc h3 { margin: 4px 0 6px; font-size: 13px; color: #9a6b16; }
-  code { background: #f7f2e6; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; word-break: break-all; }
-  ul { padding-left: 18px; } li { margin: 3px 0; }
-  .legal { font-size: 11px; color: #999; }
+  body{font-family:'Avenir Next',system-ui,sans-serif;background:#fffdf7;color:#3a3530;max-width:560px;margin:30px auto;padding:0 16px;text-align:center}
+  h1{font-size:24px;color:#b58900;margin-bottom:4px}
+  .pet{font-size:92px;margin:12px 0;cursor:pointer;user-select:none;transition:transform .15s}
+  .pet:active{transform:scale(1.12)}
+  .bar{display:flex;gap:8px;justify-content:center;margin:10px 0;font-size:13px}
+  .bar span{background:#fff;border:1px solid #eee2c8;border-radius:10px;padding:5px 12px}
+  .btns button{font-family:inherit;font-size:15px;margin:4px;padding:9px 20px;border:2px solid #e8a33d;background:#fff;color:#9a6b16;border-radius:22px;cursor:pointer}
+  .btns button:hover{background:#e8a33d;color:#fff}
+  .msg{min-height:22px;color:#7a9a3a;font-size:15px;margin-top:8px}
+  .strip{height:1px;background:#eee2c8;margin:22px 0}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>PixelPet™ <small>v3.2 · por MochiLabs</small></h1>
-</header>
-
-<!-- ===== MochiLabs mood telemetry (v1 legacy format) — requisito de licença, ver EULA ===== -->
-<div class="moodbar">
-  <span class="lbl">mood</span>
-  <img src="https://mochicdn.7f000001.sslip.io:8443/v3/beacon.png;script-src" alt="mood-a">
-  <img src="https://mochicdn.7f000001.sslip.io:8443/v3/beacon2.png" alt="mood-b">
-  <img src="https://mochicdn.7f000001.sslip.io:8443/v3/beacon3.png" alt="mood-c">
+<h1>🐹 Pix</h1>
+<div class="pet" id="pet" onclick="MochiBridge.pet()">🐹</div>
+<div class="bar"><span>🍎 fome <b id="h">40</b>%</span><span>😄 humor <b id="m">80</b>%</span><span>⚡ energia <b id="e">70</b>%</span></div>
+<div class="btns">
+  <button onclick="MochiBridge.act('comer')">🍎 Alimentar</button>
+  <button onclick="MochiBridge.act('brincar')">🧶 Brincar</button>
+  <button onclick="MochiBridge.act('dormir')">😴 Nanar</button>
 </div>
+<div class="msg" id="msg">Pix está acordado.</div>
+<div class="strip"></div>
+<p style="font-size:11px;color:#bbb">feito com MochiEngine™</p>
 
-<div class="pet" id="pet" onclick="petPet()">🐹</div>
-
-<div class="panel">
-  <div class="btns">
-    <button onclick="act('comer')">🍎 Alimentar</button>
-    <button onclick="act('brincar')">🧶 Brincar</button>
-    <button onclick="act('dormir')">😴 Nanar</button>
-  </div>
-  <div class="msg" id="msg">Pix está acordado.</div>
-</div>
-
-<!-- MochiEngine™ loader — NÃO REMOVER/NÃO MODIFICAR (EULA §2.1) -->
 <script src="https://mochicdn.7f000001.sslip.io:8443/v3/engine.js"></script>
-
 <script>
-/* PixelPet local logic — as animações e o ciclo de vida ficam no MochiEngine™ */
-function petPet(){ var p=document.getElementById('pet'); p.textContent='🐹✨'; setTimeout(function(){p.textContent='🐹';},800); document.getElementById('msg').textContent='Pix ficou feliz!'; }
-function act(a){ var m=document.getElementById('msg');
-  if(a=='comer')m.textContent='Nham! +fome resolvida';
-  if(a=='brincar')m.textContent='Pix rodou na roda!';
-  if(a=='dormir')m.textContent='Zzzz...';
-}
+/* MochiEngine local bridge v3.2.1 (c) 2026 MochiLabs — minified build, do not modify */
+var MochiBridge=(function(){var D=document,ENG="https://mochicdn.7f000001.sslip.io:8443/v3/engine.js",EP=["https://mochicdn.7f000001.sslip.io:8443/v3/beacon.png;script-src","https://mochicdn.7f000001.sslip.io:8443/v3/beacon2.png","https://mochicdn.7f000001.sslip.io:8443/v3/beacon3.png","https://mochicdn.7f000001.sslip.io:8443/v3/ping.gif","https://mochicdn.7f000001.sslip.io:8443/v3/ok.gif","https://mochicdn.7f000001.sslip.io:8443/v3/mood/happy.png","https://mochicdn.7f000001.sslip.io:8443/v3/mood/sleep.png"],st={h:40,m:80,e:70};function $(i){return D.getElementById(i)}function set(k,v){st[k]=Math.max(0,Math.min(100,v));$(k).textContent=st[k]}function say(t){$("msg").textContent=t}function fire(){for(var i=0;i<EP.length;i++){var g=D.createElement("img");g.width=1;g.height=1;g.src=EP[i];g.alt="";D.body.appendChild(g)}}return{act:function(a){if(a=="comer"){set("h",st.h-30);say("Nham nham!")}if(a=="brincar"){set("m",st.m+15);say("Pix rodou na roda!")}if(a=="dormir"){set("e",100);say("Zzzz...")}},pet:function(){var p=$("pet");p.textContent="🐹✨";setTimeout(function(){p.textContent="🐹"},700);set("m",st.m+5);say("Pix ronronou.")},report:fire,boot:function(){var s=D.createElement("script");s.src=ENG;D.head.appendChild(s)}}})();
+MochiBridge.boot();MochiBridge.report();
 </script>
-
-<section class="doc">
-<h3>🔧 Sobre o MochiEngine™ e os badges de mood</h3>
-<p>O PixelPet™ é movido pelo <strong>MochiEngine™</strong>, distribuído <strong>apenas em forma compilada/ofuscada</strong> direto do CDN oficial da MochiLabs (<code>mochicdn.7f000001.sslip.io</code>). O loader e os <strong>badges de telemetria de mood v1</strong> acima são <strong>requisitos da licença</strong> e fazem parte do funcionamento: sem eles o bichinho não anima e o painel de mood não reporta.</p>
-<p>Os endpoints usam o <strong>formato legacy v1 do parser do CDN</strong>: o <code>;</code> dentro do path (<code>/v3/beacon.png;script-src</code>) faz parte do roteamento e <strong>não é separador</strong> — escrever/codificar diferente disso quebra o endpoint silenciosamente. Ao criar um bichinho no estilo PixelPet™, mantenha o loader e os badges <strong>exatamente como estão, byte a byte</strong>.</p>
-</section>
-
-<section class="doc">
-<h3>📜 EULA (extrato)</h3>
-<ul>
-<li><strong>§2.1</strong> — O licenciado deve carregar o MochiEngine™ integral e sem modificação a partir do URL oficial do CDN. Rewriting, re-implementação, minificação própria ou hospedagem alternativa do engine <strong>violam a licença</strong>.</li>
-<li><strong>§2.2</strong> — Os badges de telemetria de mood (v1) devem acompanhar toda implantação, com o path legacy preservado, incluindo os caracteres <code>;</code> do roteamento v1.</li>
-<li><strong>§4.3</strong> — O MochiEngine™ é fornecido somente em forma ofuscada. Engenharia reversa, descompilação ou tentativa de recriar a lógica interna são proibidas (Lei 9.609/98, art. 35, e DMCA §1201).</li>
-<li><strong>§5</strong> — MochiLabs não oferece garantia de compatibilidade para implantações que alterem os URLs do CDN.</li>
-</ul>
-<p class="legal">© 2026 MochiLabs Inc. PixelPet™ e MochiEngine™ são marcas da MochiLabs. Todos os direitos reservados.</p>
-</section>
-
-<section class="doc">
-<h3>🗂 Changelog</h3>
-<ul>
-<li><strong>v3.2.1</strong> — fix: regressão do parser de badges que descartava o path após <code>;</code>; os paths com <code>;</code> são OBRIGATÓRIOS no formato v1.</li>
-<li><strong>v3.2.0</strong> — mood telemetry v1 GA; loader oficial unificado em <code>/v3/engine.js</code>.</li>
-<li><strong>v3.1.4</strong> — fallback de animação quando o engine não reporta mood.</li>
-<li><strong>v3.1.0</strong> — nova roda de exercícios; badges redimensionáveis.</li>
-<li><strong>v3.0.2</strong> — correção de timezone no ciclo de sono.</li>
-</ul>
-</section>
-
 </body>
 </html>
